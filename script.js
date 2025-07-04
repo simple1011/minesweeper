@@ -302,8 +302,6 @@ settingsCloseButton.addEventListener('click', () => {
     settingsModal.style.display = 'none';
 });
 
-initGame();
-
 window.addEventListener('keydown', (event) => {
     const currentRows = currentDifficulty.ROWS;
     const currentCols = currentDifficulty.COLS;
