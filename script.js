@@ -66,11 +66,6 @@ function initGame() {
     pingInterval = setInterval(measurePing, 5000); // Measure ping every 5 seconds
 }
 
-    // Start ping measurement
-    measurePing();
-    pingInterval = setInterval(measurePing, 5000); // Measure ping every 5 seconds
-}
-
 function updateSelectedCellVisual() {
     cells.forEach((cell, index) => {
         if (index === selectedCellIndex) {
