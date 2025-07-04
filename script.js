@@ -1,10 +1,14 @@
 const board = document.getElementById('board');
 const minesLeftDisplay = document.getElementById('mines-left');
 const timerDisplay = document.getElementById('timer');
+const pingDisplay = document.getElementById('ping-display');
 const resetButton = document.getElementById('reset-button');
 const guideButton = document.getElementById('guide-button');
 const guideModal = document.getElementById('guide-modal');
 const closeButton = document.querySelector('.close-button');
+const settingsButton = document.getElementById('settings-button');
+const settingsModal = document.getElementById('settings-modal');
+const settingsCloseButton = document.querySelector('.settings-close-button');
 
 const DIFFICULTY = {
     BEGINNER: { ROWS: 9, COLS: 9, MINES: 10 },
@@ -35,8 +39,10 @@ function initGame() {
     gameStarted = false;
     timeElapsed = 0;
     clearInterval(timerInterval);
+    clearInterval(pingInterval);
     minesLeftDisplay.textContent = `지뢰: ${currentDifficulty.MINES}`;
     timerDisplay.textContent = `시간: 0`;
+    pingDisplay.textContent = `핑: N/A`;
 
     board.style.gridTemplateColumns = `repeat(${currentDifficulty.COLS}, 1fr)`;
 
@@ -51,11 +57,18 @@ function initGame() {
         cells.push(cell);
     }
 
-    placeMines();
-
     // Set initial selected cell
     selectedCellIndex = 0;
     updateSelectedCellVisual();
+
+    // Start ping measurement
+    measurePing();
+    pingInterval = setInterval(measurePing, 5000); // Measure ping every 5 seconds
+}
+
+    // Start ping measurement
+    measurePing();
+    pingInterval = setInterval(measurePing, 5000); // Measure ping every 5 seconds
 }
 
 function updateSelectedCellVisual() {
@@ -89,11 +102,33 @@ function startGame() {
     }
 }
 
+function placeMinesAfterFirstClick(firstClickedIndex) {
+    let minesPlaced = 0;
+    const forbiddenIndices = [firstClickedIndex, ...getNeighbors(firstClickedIndex)];
+
+    while (minesPlaced < currentDifficulty.MINES) {
+        const randomIndex = Math.floor(Math.random() * (currentDifficulty.ROWS * currentDifficulty.COLS));
+        if (!mines.includes(randomIndex) && !forbiddenIndices.includes(randomIndex)) {
+            mines.push(randomIndex);
+            minesPlaced++;
+        }
+    }
+}
+
 function handleClick(event) {
     startGame();
 
     const cell = event.target;
     const index = parseInt(cell.dataset.index);
+
+    if (!gameStarted) {
+        placeMinesAfterFirstClick(index);
+        gameStarted = true;
+        timerInterval = setInterval(() => {
+            timeElapsed++;
+            timerDisplay.textContent = `시간: ${timeElapsed}`;
+        }, 1000);
+    }
 
     if (cell.classList.contains('flagged')) {
         return;
@@ -259,6 +294,17 @@ window.addEventListener('click', (event) => {
     if (event.target == guideModal) {
         guideModal.style.display = 'none';
     }
+    if (event.target == settingsModal) {
+        settingsModal.style.display = 'none';
+    }
+});
+
+settingsButton.addEventListener('click', () => {
+    settingsModal.style.display = 'block';
+});
+
+settingsCloseButton.addEventListener('click', () => {
+    settingsModal.style.display = 'none';
 });
 
 initGame();
@@ -303,8 +349,35 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
-toggleTileStyleButton.addEventListener('click', () => {
-    cells.forEach(cell => {
-        cell.classList.toggle('cell-alt');
-    });
-});
+let currentTheme = 'light-theme'; // Initial theme
+document.body.classList.add(currentTheme);
+
+// Function to toggle theme
+function toggleTheme() {
+    if (currentTheme === 'light-theme') {
+        document.body.classList.remove('light-theme');
+        document.body.classList.add('dark-theme');
+        currentTheme = 'dark-theme';
+    } else {
+        document.body.classList.remove('dark-theme');
+        document.body.classList.add('light-theme');
+        currentTheme = 'light-theme';
+    }
+}
+
+toggleTileStyleButton.addEventListener('click', toggleTheme);
+
+function measurePing() {
+    const startTime = new Date().getTime();
+    const img = new Image();
+    img.onload = () => {
+        const endTime = new Date().getTime();
+        const ping = endTime - startTime;
+        pingDisplay.textContent = `핑: ${ping}ms`;
+    };
+    img.onerror = () => {
+        pingDisplay.textContent = `핑: 오류`;
+    };
+    // Use a small, cache-busting image to measure network latency
+    img.src = 'https://www.google.com/images/cleardot.gif?' + new Date().getTime();
+}
