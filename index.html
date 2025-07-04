@@ -12,10 +12,34 @@
         <div class="info-panel">
             <div id="mines-left">지뢰: 0</div>
             <button id="reset-button">새 게임</button>
+            <button id="guide-button">가이드</button>
             <div id="timer">시간: 0</div>
+        </div>
+        <div class="difficulty-selection">
+            <button id="beginner-button">초급</button>
+            <button id="intermediate-button">중급</button>
+            <button id="expert-button">고급</button>
+        </div>
+        <div class="tile-style-selection">
+            <button id="toggle-tile-style">타일 변경</button>
         </div>
         <div id="board"></div>
     </div>
+
+    <div id="guide-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>지뢰찾기 게임 방법</h2>
+            <p>1. 지뢰가 없는 칸을 클릭하여 엽니다.</p>
+            <p>2. 숫자는 주변 8칸에 있는 지뢰의 개수를 나타냅니다.</p>
+            <p>3. 지뢰가 있다고 생각되는 칸은 마우스 오른쪽 버튼으로 깃발을 꽂습니다.</p>
+            <p>4. 모든 지뢰를 찾거나, 지뢰가 없는 모든 칸을 열면 승리합니다.</p>
+            <p>5. 지뢰를 클릭하면 게임 오버입니다.</p>
+            <p>6. '새 게임' 버튼으로 게임을 다시 시작할 수 있습니다.</p>
+            <p>7. 난이도 버튼으로 게임의 크기와 지뢰 수를 변경할 수 있습니다.</p>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
