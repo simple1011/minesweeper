@@ -349,23 +349,11 @@ window.addEventListener('keydown', (event) => {
     }
 });
 
-let currentTheme = 'light-theme'; // Initial theme
-document.body.classList.add(currentTheme);
-
-// Function to toggle theme
-function toggleTheme() {
-    if (currentTheme === 'light-theme') {
-        document.body.classList.remove('light-theme');
-        document.body.classList.add('dark-theme');
-        currentTheme = 'dark-theme';
-    } else {
-        document.body.classList.remove('dark-theme');
-        document.body.classList.add('light-theme');
-        currentTheme = 'light-theme';
-    }
-}
-
-toggleTileStyleButton.addEventListener('click', toggleTheme);
+toggleTileStyleButton.addEventListener('click', () => {
+    cells.forEach(cell => {
+        cell.classList.toggle('cell-alt');
+    });
+});
 
 function measurePing() {
     const startTime = new Date().getTime();
