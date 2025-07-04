@@ -21,7 +21,6 @@ let currentDifficulty = DIFFICULTY.BEGINNER;
 const beginnerButton = document.getElementById('beginner-button');
 const intermediateButton = document.getElementById('intermediate-button');
 const expertButton = document.getElementById('expert-button');
-const toggleTileStyleButton = document.getElementById('toggle-tile-style');
 
 let cells = [];
 let mines = [];
@@ -32,6 +31,7 @@ let timeElapsed = 0;
 let selectedCellIndex = -1; // -1 means no cell is selected initially
 
 function initGame() {
+    console.log("initGame called"); // Debugging log
     board.innerHTML = '';
     cells = [];
     mines = [];
@@ -302,6 +302,8 @@ settingsCloseButton.addEventListener('click', () => {
     settingsModal.style.display = 'none';
 });
 
+initGame(); // Ensure initGame is called on script load
+
 window.addEventListener('keydown', (event) => {
     const currentRows = currentDifficulty.ROWS;
     const currentCols = currentDifficulty.COLS;
@@ -340,12 +342,6 @@ window.addEventListener('keydown', (event) => {
             handleRightClick({ target: cells[selectedCellIndex], preventDefault: () => {} });
         }
     }
-});
-
-toggleTileStyleButton.addEventListener('click', () => {
-    cells.forEach(cell => {
-        cell.classList.toggle('cell-alt');
-    });
 });
 
 function measurePing() {
